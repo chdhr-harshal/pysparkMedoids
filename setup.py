@@ -8,4 +8,8 @@ setup(name='pysparkMedoids',
       author_email='harshal@bu.edu',
       license='MIT',
       packages=['pysparkMedoids'],
+      install_requires=[
+                'scipy',
+                'numpy'
+          ],
       zip_safe=False)
