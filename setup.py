@@ -10,6 +10,7 @@ setup(name='pysparkMedoids',
       packages=['pysparkMedoids'],
       install_requires=[
                 'scipy',
-                'numpy'
+                'numpy',
+                'multiprocessing'
           ],
       zip_safe=False)
