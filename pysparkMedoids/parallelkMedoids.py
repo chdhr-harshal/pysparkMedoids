@@ -95,7 +95,7 @@ class parallelkMedoids(object):
             # If empty clusters were created, add new random sample medoids
             if len(new_medoids) < self.k:
                 print "Adding {} new medoids".format(k - len(new_medoids))
-                extra_medoids = data.sample(fraction=0.01, withReplacement=False).take(k - len(new_medoids))
+                extra_medoids = data.sample(fraction=0.01, withReplacement=False).take(self.k - len(new_medoids))
                 new_medoids += extra_medoids
 
             new_medoids = sc.parallelize(new_medoids).zipWithIndex()
