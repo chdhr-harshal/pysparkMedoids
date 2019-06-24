@@ -75,9 +75,16 @@ class kMedoids(object):
             # Get cluster assignment for each point in sample
             clusters = _get_clusters(sample, medoids, dist_func)
             new_medoids = clusters.map(lambda x: _get_cluster_medoid(x, dist_func))
+
             new_tot_dist = (new_medoids.map(lambda x: x[1])
                                        .fold(0.0, lambda x,y: x + y))
             new_medoids = new_medoids.flatMap(lambda x: [x[0]]).collect()
+
+            # If empty clusters were created, add new random sample medoids
+            if len(new_medoids) < self.k:
+                print "Adding {} new medoids".format(k - len(new_medoids))
+                extra_medoids = data.sample(fraction=0.01, withReplacement=False).take(k - len(new_medoids))
+                new_medoids += extra_medoids
 
             if self.verbose:
                 print "Old Metric: {}\nNew Metric: {}\n".format(tot_dist, new_tot_dist)

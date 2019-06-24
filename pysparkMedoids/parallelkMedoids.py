@@ -91,6 +91,13 @@ class parallelkMedoids(object):
             clusters_rdd = [sc.parallelize(x) for x in clusters.collect()]
             get_cluster_medoid = self._get_cluster_medoid
             new_medoids = pool.map(get_cluster_medoid, clusters_rdd)
+
+            # If empty clusters were created, add new random sample medoids
+            if len(new_medoids) < self.k:
+                print "Adding {} new medoids".format(k - len(new_medoids))
+                extra_medoids = data.sample(fraction=0.01, withReplacement=False).take(k - len(new_medoids))
+                new_medoids += extra_medoids
+
             new_medoids = sc.parallelize(new_medoids).zipWithIndex()
             new_medoid_assignment = self._get_closest_medoid(sample, new_medoids)
             new_tot_dist = self._get_tot_dist(new_medoid_assignment)
